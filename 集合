@@ -1,0 +1,154 @@
+集合
+	1.集合分类
+		List：一组可重复，有序的集合
+		Set：一组不可重复，无序的集合
+		Map：一组键值对的集合
+	2.val 集合是指val引用的是该集合，若对该集合进行修改，不会报错，但若修改了该引用的指向则会报错了(和Java相同)
+	3.Kotlin改进的地方
+		在Kotlin中存在不同的两种集合
+			只读集合：只能访问集合元素->和Java相同
+			可读写(变)集合：通过写操作扩展集合->MutableXXX
+    4.在使用时，通过只读与可读写相结合，保护数据的隐私，对外接口禁止了可修改性
+
+集合操作
+	1.初始化元素创建：XXXOf()
+		map的元素格式：key to value
+	2.创建空集合:emptyXXX()
+	3.可以指定具体哪个集合(LinkedList<T>(),ArrayList<T>())
+	4.集合复制：toXXXOf()
+	5.集合引用的变化会限制集合的可变性:val rL:List<Int> = mutableList ->此时这个List有了写的限制条件，不能再写入元素了
+
+迭代器(同Java)
+	1.Iterator中的hasNext()与next()
+	2.for循环：for(xx in list)
+	3.forEach():list.forEach{
+					// it就表示当前元素
+				}
+	4.可变集合的可变迭代器可以对原集合进行add/
+
+区间与数列
+	1.区间(搭配in使用,for(i in xxx))
+		1..4/1.rangeTo(4)->[1,4]
+		4 downTo 1->[4,1]
+		1..8 step 2->步长为2
+		1 until 4->[1,4)
+	2.区间之间
+		可以使用contains：判断某个数是否在区间内
+		可以使用区间1 in 区间2：判断区间1是否在区间2内
+
+序列Sequence
+	与Iterable一样(提供相同的函数)，但实现另一种方法来进行多步骤集合处理
+	假设现在有多个操作的场景：
+		Iterable：每个处理步骤完成返回结果(中间集合)->对整个集合统一做某一操作后接着统一做下一操作->横向遍历
+		Sequence：对每个元素逐个执行所有的处理步骤->对整个集合的每个元素逐个执行所有操作->纵向遍历(遇到符合要求的就会停下)
+	序列创建：
+		直接创建：sequenceOf()
+		Iterable转换：Iterable.asSequence()
+		generateSequence()：默认创建无限序列，遇到null就会停止
+	总结：
+		**末端存在first操作：使用sequence，其他的就用List吧
+
+集合操作
+	无论是映射、过滤、划分，lambda表达式中的it都指的是集合中的当前元素
+	*映射.map(){lambda表达式}：将给定的lambda表达式应用于当前集合的所有元素上，并返回新的集合(结果的顺序与元素的原始顺序相同)
+		还有其他花里胡哨的方法：
+			mapIndexed()->元素的下标也会参与转换
+			mapNotNull()->根据lambda返回值过滤null值
+			mapKeys()/mapValues()->应用于Map集合
+	*打平
+		flatten()：将集合中的所有集合的值放入新的集合中返回
+		flatMap()：将集合中的所有集合按照传入的函数组成新的集合返回(可以是选某个属性，或符合某种条件)
+	*对集合中的元素进行统一操作.flag(initVal){lambda}
+		在initVal的基础上从第一项到最后一项通过一个函数(lambda)累计所有的值(可应用于集合所有元素的累加)
+	*过滤.filter(){lambda表达式}：过滤集合中符合lambda表达式的元素，返回一个新集合
+		所谓符合lambda表达式就是指lambda表达式的值是true，而所谓lambda表达式的返回值就是最后一个表达式的值
+	划分(match,rest).partition(){lambda}：符合lambda的元素集合给match，不符合的给rest	
+	添加+，删除-：给当前集合直接+/-一个小集合
+	取子集合：slice(start,end,step)，把集合想象成数组即可
+		take(n)：从前向后取n个->1..n
+		takeLast(n)：从后向前取n个(顺序不变)->length-n..length
+		drop(n)：从前向后删n个->n+1..length
+		dropLast(n)：从后向前删n个->1..length-n
+	*按位置取元素.elementAt(index)：0开始计数
+		first()：第一个
+		last()：最后一个
+		https://www.kotlincn.net/docs/reference/collection-elements.html
+	排序
+		sort():自然序列排序(返回的还是原集合)
+		sorted():返回的是新集合
+		*按照某个属性排序：
+			sortBy():按照元素的某个属性来排
+			sortedBy()：同理
+			sortByDescending():降序
+		*同Java，要么被比较的对象所在的类继承了Comparable接口，要么就传入一个比较器Comparator
+			sortWith()/sortedWith()
+			*自定义比较器：
+				最简单按多个属性排序compareBy({属性1}，{属性2}...)}
+				还有再复杂的逻辑就得创建Comparator对象覆写compare()方法了
+			*自定义类实现Comparable接口覆写compareTo()方法来定义排序规则(通过data class更好些)
+	*聚合操作：
+		所有元素求和/平均值/最大值...
+		特定元素...(有限制条件)
+		https://www.kotlincn.net/docs/reference/collection-aggregate.html
+	*添加删除:
+		看文档吧，https://www.kotlincn.net/docs/reference/collection-write.html
+
+List操作(https://www.kotlincn.net/docs/reference/list-operations.html)
+	1.获取下标的值
+		get()/[]
+	2.取部分集合
+		subList()
+	3.查元素位置
+		indexOf(value)
+	4.更新
+		list[index]=newValue
+	5.删除
+		removeAt(index)
+	6.随机重排
+		shuffle()
+	7.逆置
+		reverse()
+
+Set操作
+	1.并集
+		SetA union SetB
+	2.交集
+		SetA intersect SetB
+	3.差集
+		SetA subtract SetB
+
+Map操作
+	1.get(key)/getValue(value)
+	2.filter{(key,value)->表达式}
+	3.plus/minus：键值对->Pair(key,value)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
