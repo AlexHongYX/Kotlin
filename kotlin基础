@@ -95,7 +95,7 @@
 			for((index,value) in array.withIndex())：获取值($value)+下标($index)
 	4.while/doWhile(同Java)
 
-程序返回与跳转(不常用标签)
+程序返回与跳转(不常用标签呵呵)
 	return,break,continue基本的用法和Java相同，只不过增强在：可以跳转/返回至标签处
 	Kotlin中任何表达式都可以使用标签(label)标记：
 		标签格式：xxx@
