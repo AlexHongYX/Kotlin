@@ -1,0 +1,104 @@
+操作符重载(https://www.kotlincn.net/docs/reference/operator-overloading.html)
+	通过operator声明对象的unaryPlus()/unaryMinus()来重载+a/-a的具体实现
+	与之类似：a++,a--
+	一般没事不需要重载操作符，只是在某些特殊场景会用到
+
+关于遍历及区间
+	要想使用区间，当前自定义类必须存在迭代器，因此当前类需要实现Iterable<T>接口并覆写其iterator()方法
+	同时借助其他类(实现了Iterator<T>接口覆写hasNext()与next())来完成对当前区间的遍历
+
+解构声明(https://www.kotlincn.net/docs/reference/multi-declarations.html)
+	将一个对象解构成很多个变量：val (a,b) = Person(name,age)
+	解构相当于是：一次性将一个对象中的多个属性按顺序对应到一组变量中
+	编译器自动设置: componentN()
+	其他的特性使用时看文档即可
+
+空安全
+	?->当前变量为可空变量
+	以下的前提都是在当前变量为可空变量，如果当前变量不可能为null，则就没有下面这些问题了
+	1.  ?.->安全的调用可能为null的变量->代替if(xxx!=null){xxx}
+		eg: val len = str?.length
+		如果当前变量为null，则str?.length整个表达式的返回值也是null
+		也可以链式调用：bob?.department?.head?.name(bob所在部门的领导的姓名)
+	2.  ?.let{
+			// 若变量不为null时的处理
+		}
+	3.  ?:->对于一个可空变量使用?: ->代替ss = xxx; if(ss==null){aaa}
+		?:左侧表达式非空时返回左侧表达式的值，为空时返回右侧表达式的值
+		eg: str?.length ?: -1 -> 若str为空，则str?.length表达式的值为null，会返回-1，若非空，则返回str.length
+	4.若可空变量出现在=左边，则若出现为null的场景，右边的赋值操作不会执行
+	5.安全的进行类型转换(避免ClassCastException)->as?
+		eg:var aInt:Int? = a as? Int
+	6.可以使用filterNotNull()过滤可空元素集合中为null的元素
+	7.??：将可空变量修饰为不可空变量
+	8.!!：表示当前对象不为空时执行，为空则抛出NPE异常
+	***9.总结：
+		一般使用的一个可空的变量时，由于该变量为空时调用其方法/参数毫无意义，因此采用?.调用其内容即可
+		如果要分两种情况(空/非空)，则直接使用if-else即可
+
+类型检测与转换
+	1.类型检测
+		is -> instanceOf
+		!is -> !instanceOf
+	*2.智能转换
+		如果if(aa is xxx)判断成功，那么在该if分支中，aa就会被智能转换为xxx类型(不需要显示的类型转换)
+	3.类型转换
+		不安全：as -> 转换失败后抛异常
+		安全：as? -> 转换失败时返回null
+
+异常类
+	Nothing类型，Kotlin中throw是表达式，若一个函数最终抛异常(throw)，那么返回值就是Nothing类型
+	Kotlin中没有受查异常，但一般Kotlin的异常体系和Java的大径相同
+
+作用域函数
+	1.当一个对象调用作用域函数let,run,with,apply,also，在对象上执行一个代码块，在块中使用it代替该对象，以及整个表达式的结果是什么
+		也就是在这个块中可以直接操作该对象，而不需要创建一个新的对象，使代码简洁可读
+	2.this与it
+		run,with,apply：this引用上下文(类似在普通函数中访问this上下文)
+		let,also：it引用上下文(作用与this相同)
+	3.返回值
+		apply,alse->返回上下文对象(在同一对象链式调d用/将处理后的对象作为返回值)
+		let,run,with->返回lambda表达式结果(赋值给其他变量/仅作为临时作用域)
+	4.区别
+		let:仅使用非空值执行代码块(?.let{...})
+		with:对对象的操作with(对象){...}
+		run:与with做的事情相同，但与let格式相同
+		apply:对对象的配置(属性赋值...)
+		also:输出对象相关信息，不修改对象属性
+
+委托模式(代理模式)->https://juejin.im/post/5e1288d86fb9a048217a19d9
+	1.普通委托类与被委托类与共同接口就和Java相同
+	2.Kotlin主要拓展了一个委托属性，参考文章即可
+	3.lazy()等委托的使用
+
+==与equals
+	Kotlin中==实际上就是equals的操作符重载-> ==和equals相同
+	比较引用地址-> ===x
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

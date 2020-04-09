@@ -1,0 +1,66 @@
+数据类
+	1.格式：
+		data class：只保存数据的类，相当于标准的JavaBean类
+		data class User(val name:String,val age:Int)
+	2.编译器会根据主构造函数的参数自动生成：equals()/hashCode()/toString()/componentN()/copy()/getter/setter
+	3.要求：主构造函数至少一个参数，且参数需要标记为val/var，不能是抽象、开放、密封、内部
+	4.数据类中可以覆写equals()/hashCode()/toString()，不能覆写componentN()/open()
+	5.如果只是想声明一个属性，该属性并不会作为equals()等方法的判断条件时，则在数据类中声明该属性即可
+	6.copy()：对象的整体复制(包括所有属性)，并且可以再该方法中显式的修改某个属性后赋值给新对象
+
+泛型
+	1.日常开发直接使用泛型就足够了
+	2.out：仅从Source<out T>中返回(生产)，同？ extends T
+	3.int：安全的写入，同? super 
+
+嵌套类与内部类
+	1.嵌套类只是类中套一个类，可以使用Outter.Nested().foo()调用嵌套类方法，不需要产生外部类对象
+	2.内部类需要使用inner修饰，可以访问外部类的成员(private也可以)，需要使用Outter().Inner().foo()调用内部类方法，需要产生内部类对象
+		可通过对象表达式创建匿名内部类实例
+		object:Father(){
+			// 方法
+		}
+
+枚举类
+	enum class
+	枚举类中的每个枚举都是枚举类的实例，初始化需要调用枚举类的构造方法(主/次)
+	每个枚举还可以实现当前枚举类的抽象方法
+	某个类是否在枚举中：EnumClass.valueOf(value:String)，没找到会抛IllegalArgumentException异常
+	遍历枚举类时使用：EnunClass.values():Array<EnumClass>
+
+对象表达式与对象声明
+	1.对象声明：
+		单例模式object ClassName{}：声明一个饿汉式单例模式
+		伴生对象companion object Factory：相当于在当前类中声明了一个工厂类(类中的工厂类)，通过类名.工厂类名(可省略).setXXX()，作用类似于静态域
+	2.对象表达式(就是匿名内部类)
+		替代匿名内部类：object : 父类,接口...{实现其抽象方法}
+		如果父类存在有参构造也需要传参，可继承一个父类实现多个接口
+		可以仅使用object{}:相当于是创建了一个Object对象
+	3.区别
+		对象声明：第一次被访问时延迟执行(懒加载)
+		对象表达式：使用时立即执行
+		伴生对象的初始化：相应的类被加载时初始化，与Java静态初始化块相同
+
+类型别名
+	typealias newTypeName = 某类型
+
+委托
+	就是代理模式
+
+内联类与内联方法
+	inline class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
